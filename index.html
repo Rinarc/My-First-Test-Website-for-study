@@ -2,120 +2,206 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>视频播放网站 - 首页</title>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Roboto', sans-serif;
+  <title>多语言切换</title>
+<!-- 在原有CSS基础上添加以下样式 -->
+<style>
+/* ========== 全局增强 ========== */
+:root {
+    --neon-blue: #00f3ff;
+    --cyber-purple: #bc13fe;
+    --hologram-pink: #ff00ff;
+    --dark-bg: #0a0a0f;
+    --surface: #171725;
+    --text-primary: rgba(255,255,255,0.95);
+    --glow-intensity: 0.8;
+}
+
+body {
+    font-family: 'Orbitron', sans-serif;
+    letter-spacing: 0.05em;
+}
+
+/* ========== 全息投影背景 ========== */
+.hologram-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: 
+        linear-gradient(45deg, 
+            rgba(0, 243, 255, 0.05) 0%, 
+            rgba(188, 19, 254, 0.03) 100%),
+        radial-gradient(circle at 20% 80%, 
+            rgba(255, 0, 255, 0.1) 0%, 
+            transparent 50%);
+    z-index: -2;
+    animation: hologram 15s linear infinite;
+}
+
+@keyframes hologram {
+    0% { background-position: 0% 0%; }
+    50% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+}
+
+/* ========== 增强导航栏 ========== */
+.navbar {
+    backdrop-filter: blur(10px);
+    background: rgba(23, 23, 37, 0.9);
+    border-bottom: 1px solid rgba(0, 243, 255, 0.2);
+}
+
+.nav-links a {
+    position: relative;
+    padding: 0.5rem 1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.nav-links a::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--neon-blue);
+    transition: width 0.3s;
+}
+
+.nav-links a:hover::after {
+    width: 100%;
+}
+
+/* ========== 未来感视频卡片 ========== */
+.video-card {
+    background: linear-gradient(
+        145deg,
+        rgba(23, 23, 37, 0.8) 0%,
+        rgba(11, 11, 19, 0.8) 100%
+    );
+    border: 1px solid rgba(0, 243, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.video-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 12px 30px rgba(0, 243, 255, 0.15);
+}
+
+.thumbnail {
+    position: relative;
+    overflow: hidden;
+}
+
+.thumbnail::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        45deg,
+        rgba(0, 243, 255, 0.1) 0%,
+        rgba(188, 19, 254, 0.05) 100%
+    );
+    mix-blend-mode: overlay;
+}
+
+/* ========== 全息按钮 ========== */
+.btn-neon {
+    position: relative;
+    padding: 0.8rem 1.5rem;
+    border: none;
+    background: rgba(0, 243, 255, 0.1);
+    color: var(--neon-blue);
+    border-radius: 4px;
+    overflow: hidden;
+    transition: all 0.3s;
+}
+
+.btn-neon::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+        transparent,
+        var(--neon-blue),
+        transparent 30%
+    );
+    animation: rotate 4s linear infinite;
+}
+
+.btn-neon:hover {
+    background: rgba(0, 243, 255, 0.2);
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.3);
+}
+
+@keyframes rotate {
+    100% { transform: rotate(360deg); }
+}
+
+/* ========== 播放器界面增强 ========== */
+.player-container {
+    background: rgba(0, 0, 0, 0.9);
+    border: 1px solid var(--neon-blue);
+    box-shadow: 0 0 30px rgba(0, 243, 255, 0.2);
+}
+
+#mainPlayer {
+    border: 1px solid rgba(0, 243, 255, 0.2);
+}
+
+/* ========== 加载动画 ========== */
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--neon-blue);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    100% { transform: rotate(360deg); }
+}
+
+/* ========== 响应式优化 ========== */
+@media (max-width: 768px) {
+    .video-grid {
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     }
-    body {
-      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-      height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px;
-      overflow: hidden;
+    
+    .navbar {
+        padding: 0.5rem;
     }
-    header {
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      padding: 15px 30px;
-      border-radius: 10px;
-      margin-bottom: 30px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-      text-align: center;
-      width: 100%;
-      max-width: 600px;
-      animation: fadeIn 1s ease-in-out;
+    
+    .nav-links a {
+        padding: 0.5rem;
+        font-size: 0.9rem;
     }
-    nav a {
-      color: white;
-      text-decoration: none;
-      margin: 0 15px;
-      font-weight: 500;
-      transition: color 0.3s;
-    }
-    nav a:hover {
-      color: #00ffcc;
-    }
-    .video-card {
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      margin: 20px 10px;
-      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-      transition: transform 0.3s, box-shadow 0.3s;
-      width: 100%;
-      max-width: 400px;
-    }
-    .video-card:hover {
-      transform: translateY(-10px);
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
-    .video-card h3 {
-      color: #333;
-      margin-bottom: 10px;
-      animation: slideIn 1s ease-in-out;
-    }
-    a {
-      display: inline-block;
-      margin-right: 10px;
-      text-decoration: none;
-      color: #333;
-      padding: 5px 10px;
-      border-radius: 4px;
-      transition: background-color 0.3s, transform 0.3s;
-    }
-    a:hover {
-      background-color: #ddd;
-      transform: scale(1.05);
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
-    @keyframes slideIn {
-      from { transform: translateY(-20px); opacity: 0; }
-      to { transform: translateY(0); opacity: 1; }
-    }
-    @keyframes glow {
-      0% { box-shadow: 0 0 5px rgba(0, 255, 204, 0.5); }
-      50% { box-shadow: 0 0 15px rgba(0, 255, 204, 1); }
-      100% { box-shadow: 0 0 5px rgba(0, 255, 204, 0.5); }
-    }
-    .glow {
-      animation: glow 3s infinite;
-    }
-  </style>
+}
+</style>
 </head>
 <body>
   <header>
     <h1>视频播放网站</h1>
     <nav>
+      <a href="index.html">首页</a>
       <a href="login.html">登录</a>
-      <a href="playlist.html">播放列表</a>
-      <a href="recommend.html">推荐</a>
-      <a href="language.html">语言切换</a>
     </nav>
   </header>
   <main>
-    <h2>推荐视频</h2>
-    <div class="video-card">
-      <h3 class="glow">视频 1</h3>
-      <a href="watch.html?v=1">观看视频</a>
-      <a href="playlist.html">添加到播放列表</a>
-    </div>
-    <div class="video-card">
-      <h3>视频 2</h3>
-      <a href="watch.html?v=2">观看视频</a>
-      <a href="share.html">分享视频</a>
-    </div>
+    <h2>语言设置</h2>
+    <p>选择语言：</p>
+    <a href="index.html?lang=en">English</a>
+    <a href="index.html?lang=zh">中文</a>
+    <br><br>
+    <a href="index.html">返回首页</a>
   </main>
 </body>
 </html>
