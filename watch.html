@@ -1,0 +1,12 @@
+<div class="video-actions">
+    <button onclick="addToPlaylist()">添加到播放列表</button>
+    <button onclick="location.href='share.html?id=${videoId}'">分享</button>
+</div>
+
+<script>
+    function addToPlaylist() {
+        const playlists = JSON.parse(localStorage.playlists)
+                        .filter(p => p.user === currentUser.email);
+        // 显示播放列表选择界面
+    }
+</script>
